@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Game</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-weight: 500;
+            background: rgb(46, 44, 44);
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 18px;
+            transition: transform 1s ease;
+        }
+
+        .container {
+            width: auto;
+            height: auto;
+            display: flex;
+            margin: auto;
+            justify-content: center;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .box1 {
+            width: 500px;
+            height: 400px;
+            text-align: center;
+        }
+
+        .box2 {
+            height: 400px;
+            width: 500px;
+            text-align: center;
+        }
+
+        #turn1,
+        #turn2 {
+            display: none;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 40px;
+        }
+
+        main {
+            width: 200px;
+            text-align: center;
+            align-content: end;
+            height: 200px;
+            margin: 20px auto;
+        }
+
+        #name {
+            width: 200px;
+            padding: 6px;
+            background: white;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        span {
+            color: white;
+            font-weight: 400;
+            margin: 20px auto;
+        }
+
+        #start {
+            display: block;
+            margin: auto;
+            padding: 6px;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0px 1px 10px rgb(31, 31, 31);
+        }
+
+        .box1>button,
+        .box2>button {
+            padding: 6px;
+            background: black;
+            margin: 20px auto;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0px 1px 10px rgb(31, 31, 31);
+        }
+
+        #winner {
+            text-align: center;
+            color: white;
+        }
+
+        #reset {
+            display: block;
+            margin: 20px auto;
+            padding: 6px;
+            background: black;
+            color: white;
+            border-radius: 8px;
+            border: none;
+            box-shadow: 0px 1px 10px rgb(31, 31, 31);
+        }
+
+        .rotate {
+            transform: rotate(360deg);
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Dice game</h1>
+        <input id="name" type="text" placeholder="Type Player's Name">
+        <button id="start">Start Game</button>
+    </main>
+
+    <div class="container">
+        <div class="box1">
+            <img src="img/one.png" id="image1" alt="">
+            <h3>Player Name: <span id="player1name"></span></h3>
+            <h2>Score: <span id="player1score"></span></h2>
+            <button id="turn1" style="display:none;">Your Turn</button>
+        </div>
+        <div class="box2">
+            <img src="img/one.png" id="image2" alt="">
+            <h3>Player Name: <span id="player2name"></span></h3>
+            <h2>Score: <span id="player2score"></span></h2>
+            <button id="turn2" style="display:none;">Your Turn</button>
+        </div>
+    </div>
+
+    <h2 id="winner"></h2>
+
+    <button id="reset" style="display: none;">Reset Game</button>
+
+    <script>
+        const nameInput = document.getElementById("name");
+        let typeFirst = true;
+        let player1Points = 0;
+        let player2Points = 0;
+
+        document.getElementById("start").addEventListener("click", function () {
+            const player1name = document.getElementById("player1name");
+            const player2name = document.getElementById("player2name");
+
+            if (nameInput.value == "") {
+                alert("Enter Player 1 and Player 2 names");
+                return;
+            }
+
+            if (typeFirst) {
+                player1name.textContent = nameInput.value;
+                nameInput.value = "";
+                typeFirst = false;
+            } else {
+                player2name.textContent = nameInput.value;
+                nameInput.value = "";
+                typeFirst = true;
+                nameInput.style.display = 'none';
+                document.getElementById("turn1").style.display = "block";
+                document.getElementById("turn2").style.display = "block";
+            }
+        });
+
+        const dice1 = [
+            { src: "img/one.png", points: 1 },
+            { src: "img/two.png", points: 2 },
+            { src: "img/three.png", points: 3 },
+            { src: "img/four.png", points: 4 },
+            { src: "img/five.png", points: 5 },
+            { src: "img/six.png", points: 6 }
+        ];
+
+        const dice2 = [
+            { src: "img/one.png", points: 1 },
+            { src: "img/two.png", points: 2 },
+            { src: "img/three.png", points: 3 },
+            { src: "img/four.png", points: 4 },
+            { src: "img/five.png", points: 5 },
+            { src: "img/six.png", points: 6 }
+        ];
+
+        let yourTurn = true;
+
+        document.getElementById("turn1").addEventListener("click", function () {
+            if (!yourTurn) return;
+
+            const dice1Random = Math.floor(Math.random() * dice1.length);
+            const image1 = document.getElementById("image1");
+            image1.src = dice1[dice1Random].src;
+            image1.classList.add("rotate");
+
+            setTimeout(() => image1.classList.remove("rotate"), 1000);
+
+            player1Points += dice1[dice1Random].points;
+            document.getElementById("player1score").textContent = ` ${player1Points}`;
+
+            if (player1Points >= 20) {
+                const winner = document.getElementById("player1name").textContent;
+                document.getElementById("winner").textContent = `Winner: ${winner}`;
+                document.getElementById("turn1").style.display = "none";
+                document.getElementById("turn2").style.display = "none";
+                document.getElementById("reset").style.display = "block";
+                return;
+            }
+
+            yourTurn = false;
+        });
+
+        document.getElementById("turn2").addEventListener("click", function () {
+            if (yourTurn) return;
+
+            const dice2Random = Math.floor(Math.random() * dice2.length);
+            const image2 = document.getElementById("image2");
+            image2.src = dice2[dice2Random].src;
+            image2.classList.add("rotate");
+
+            setTimeout(() => image2.classList.remove("rotate"), 1000);
+
+            player2Points += dice2[dice2Random].points;
+            document.getElementById("player2score").textContent = ` ${player2Points}`;
+
+            if (player2Points >= 20) {
+                const winner = document.getElementById("player2name").textContent;
+                document.getElementById("winner").textContent = `Winner: ${winner}`;
+                document.getElementById("turn1").style.display = "none";
+                document.getElementById("turn2").style.display = "none";
+                document.getElementById("reset").style.display = "block";
+                return;
+            }
+
+            yourTurn = true;
+        });
+
+        document.getElementById("reset").addEventListener("click", function () {
+            player1Points = 0;
+            player2Points = 0;
+            document.getElementById("player1score").textContent = "0";
+            document.getElementById("player2score").textContent = "0";
+            document.getElementById("winner").textContent = "";
+            document.getElementById("turn1").style.display = "none";
+            document.getElementById("turn2").style.display = "none";
+            document.getElementById("reset").style.display = "none";
+            nameInput.style.display = 'block';
+        });
+    </script>
+</body>
+
+</html>
