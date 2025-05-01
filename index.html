@@ -155,6 +155,7 @@
         document.getElementById("start").addEventListener("click", function () {
             const player1name = document.getElementById("player1name");
             const player2name = document.getElementById("player2name");
+            const start = document.getElementById("start");
 
             if (nameInput.value == "") {
                 alert("Enter Player 1 and Player 2 names");
@@ -172,6 +173,7 @@
                 nameInput.style.display = 'none';
                 document.getElementById("turn1").style.display = "block";
                 document.getElementById("turn2").style.display = "block";
+                start.style.display = 'none'
             }
         });
 
